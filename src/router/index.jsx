@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import ManagerHome from "../pages/ManagerHome";
 import SignInPage from "../pages/SignIn";
 import SignUpPage from "../pages/SignUp";
+import SuccessCheckoutPage from "../pages/SuccessCheckout";
 
 
 
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
     {
       path: "/manager/sign-up",
       element : <SignUpPage/>
+    },
+    {
+      path: "/success-checkout",
+      element: <SuccessCheckoutPage/>
     }
   ]);
 
