@@ -1,16 +1,18 @@
 import { createBrowserRouter } from "react-router-dom";
-import ManagerHome from "../pages/ManagerHome";
+// import ManagerHomePage from "../pages/ManagerHomePage";
+import ManagerHomePage from "../pages/Manager/home";
 import SignInPage from "../pages/SignIn";
 import SignUpPage from "../pages/SignUp";
 import SuccessCheckoutPage from "../pages/SuccessCheckout";
 import LayoutDashboard from "../components/layout";
+import ManagerCourses from "../pages/Manager/courses";
 
 
 
 const router = createBrowserRouter([
     {
       path : "/",
-      element : <ManagerHome/>
+      element : <ManagerHomePage/>
     },
     {
       path : "/manager/sign-in",
@@ -30,7 +32,11 @@ const router = createBrowserRouter([
       children: [
         {
           index: true,
-          element: <ManagerHome/>
+          element: <ManagerHomePage/>
+        },
+        {
+          path: '/manager/courses',
+          element: <ManagerCourses/>
         }
       ]
     }
