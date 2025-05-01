@@ -1,5 +1,5 @@
 import React from "react";
-import Form from "./Form";
+import form from "./form";
 import Pricing from "./pricing";
 export default function SignUpPage(){
     return(
