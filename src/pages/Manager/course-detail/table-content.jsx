@@ -1,14 +1,15 @@
 import React from "react";
 import ContentItem from "./content-item";
+import { Link } from "react-router-dom";
 
 export default function TableContent(){
     return (
         <section id="CourseList" className="flex flex-col w-full rounded-[30px] p-[30px] gap-[30px] bg-[#F8FAFB]">
                 <div className="header flex items-center justify-between">
                     <h2 className="font-bold text-[22px] leading-[33px]">Course Content</h2>
-                    <a href="add-course-content.html" className="w-fit rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap">
+                    <Link to="/manager/courses/1/create" className="w-fit rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap">
                         Add Content
-                    </a>
+                    </Link>
                 </div>
                 <ContentItem type="text"/>
                 <ContentItem type="video"/>
