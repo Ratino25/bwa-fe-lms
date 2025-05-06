@@ -10,6 +10,7 @@ import ManageCreateCoursePage from "../pages/Manager/create-courses";
 import ManageCourseDetailPage from "../pages/Manager/course-detail";
 import ManageContentCreatePage from "../pages/Manager/course-content-create";
 import ManageCoursePreviewPage from "../pages/Manager/course-preview";
+import ManageStudentsPage from "../pages/Manager/students";
 
 
 
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
         {
           path: '/manager/courses/:id/preview',
           element : <ManageCoursePreviewPage/>
+        },
+        {
+          path: '/manager/students',
+        element: <ManageStudentsPage/>
         }
       ]
     }
