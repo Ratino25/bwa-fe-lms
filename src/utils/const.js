@@ -1,0 +1,1 @@
+export const STORAGE_KEYS = 'STORAGE_KEY'
