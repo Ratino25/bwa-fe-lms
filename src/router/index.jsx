@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 // import ManagerHomePage from "../pages/ManagerHomePage";
 import ManagerHomePage from "../pages/Manager/home";
 import SignInPage from "../pages/SignIn";
@@ -12,6 +12,9 @@ import ManageContentCreatePage from "../pages/Manager/course-content-create";
 import ManageCoursePreviewPage from "../pages/Manager/course-preview";
 import ManageStudentsPage from "../pages/Manager/students";
 import StudentPage from "../pages/student/StudentOverview";
+import secureLocalStorage from "react-secure-storage";
+import { MANAGER_SESSION, STORAGE_KEYS } from "../utils/const";
+import { getCourse } from "../services/courseService";
 
 
 
@@ -34,6 +37,14 @@ const router = createBrowserRouter([
     },
     {
       path: "/manager",
+      id: MANAGER_SESSION,
+      loader: async () => {
+        const session = secureLocalStorage.getItem(STORAGE_KEYS)        
+        if(!session){
+          throw redirect('/manager/sign-in');
+        }
+        return session
+      },
       element: <LayoutDashboard/>,
       children: [
         {
@@ -41,7 +52,12 @@ const router = createBrowserRouter([
           element: <ManagerHomePage/>
         },
         {
-          path: '/manager/courses',
+          path: '/manager/courses', 
+          loader: async () => {
+            const data = await getCourse();
+            // console.log(data);
+            return data;
+          },
           element: <ManagerCourses/>
         },
         {
