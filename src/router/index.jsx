@@ -77,7 +77,7 @@ const router = createBrowserRouter([
 
             console.log(course);
             
-            return {categories, course};
+            return {categories, course: course?.data};
           },
           element: <ManageCreateCoursePage/>
         },
