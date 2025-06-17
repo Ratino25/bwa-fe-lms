@@ -1,11 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useRef, useState } from "react";
+import React, { use, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { createCourseSchema } from "../../../utils/zodSchema";
+import { createCourse } from "../../../services/courseService";
+import { useMutation } from '@tanstack/react-query';
+
 
 export default function ManageCreateCoursePage() {
-    const categories = useLoaderData();
+    const data = useLoaderData();
 
     const {
         register,
@@ -19,8 +22,29 @@ export default function ManageCreateCoursePage() {
     const [file, setFile] = useState(null);
     const inputFileRef = useRef(null);
 
-    const onSubmit = (data) => {
-        console.log(data);
+    const navigate = useNavigate();
+
+    const { isLoading, mutateAsync } = useMutation({
+        mutationFn: (data) => createCourse(data)
+    })
+
+    const onSubmit = async (data) => {
+         console.log('SUBMIT CALLED ✅', data);
+        try {
+            const formData = new FormData()
+            formData.append('name', data.name)
+            formData.append('thumbnail', file)
+            formData.append('tagline', data.tagline)
+            formData.append('categoryId', data.categoryId)
+            formData.append('description', data.description)
+
+            await mutateAsync(formData)
+
+            navigate('/manager/courses')
+
+        } catch (error) {
+            console.error("❌ Gagal membuat course:", error);
+        }
     }
     return (
         <>
@@ -40,7 +64,7 @@ export default function ManageCreateCoursePage() {
                     <label htmlFor="title" className="font-semibold">Course Name</label>
                     <div className="flex items-center w-full rounded-full border border-[#CFDBEF] gap-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF]">
                         <img src="/assets/images/icons/note-favorite-black.svg" className="w-6 h-6" alt="icon" />
-                        <input {...register('name')} type="text" name="title" id="title" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write better name for your course" />
+                        <input {...register('name')} type="text" id="title" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write better name for your course" />
                     </div>
                     <span className="error-message text-[#FF435A]">
                         {errors.name?.message}
@@ -49,16 +73,16 @@ export default function ManageCreateCoursePage() {
                 <div className="relative flex flex-col gap-[10px]">
                     <label htmlFor="thumbnail" className="font-semibold">Add a Thumbnail</label>
                     <div id="thumbnail-preview-container" className="relative flex shrink-0 w-full h-[200px] rounded-[20px] border border-[#CFDBEF] overflow-hidden">
-                        <button type="button" id="trigger-input" onClick={() => inputFileRef?.current?.click()}    className="absolute top-0 left-0 w-full h-full flex justify-center items-center gap-3 z-0" >
+                        <button type="button" id="trigger-input" onClick={() => inputFileRef?.current?.click()} className="absolute top-0 left-0 w-full h-full flex justify-center items-center gap-3 z-0" >
                             <img src="/assets/images/icons/gallery-add-black.svg" className="w-6 h-6" alt="icon" />
                             <span className="text-[#838C9D]">Add an attachment</span>
                         </button>
-                        <img id="thumbnail-preview" src={file !== null ? URL.createObjectURL(file) : ""} className={`w-full h-full object-cover ${file} !== null ? "block" : "hidden"`}  alt="thumbnail" />
+                        <img id="thumbnail-preview" src={file !== null ? URL.createObjectURL(file) : ""} className={`w-full h-full object-cover ${file} !== null ? "block" : "hidden"`} alt="thumbnail" />
                         <button type="button" id="delete-preview" className="absolute right-[10px] bottom-[10px] w-12 h-12 rounded-full z-10 hidden">
                             <img src="/assets/images/icons/delete.svg" alt="delete" />
                         </button>
                     </div>
-                    <input {...register('thumbnail')} ref={inputFileRef} type="file" onChange={(e) => { if(e.target.files) { setFile(e.target.files[0]); setValue('thumbnail',e.target.files[0])  } }} name="thumbnail" id="thumbnail" accept="image/*" className="absolute bottom-0 left-1/4 -z-10" />
+                    <input {...register('thumbnail')} ref={inputFileRef} type="file" onChange={(e) => { if (e.target.files) { setFile(e.target.files[0]); setValue('thumbnail', e.target.files[0]) } }} name="thumbnail" id="thumbnail" accept="image/*" className="absolute bottom-0 left-1/4 -z-10" />
                     <span className="error-message text-[#FF435A]">
                         {errors.thumbnail?.message}
                     </span>
@@ -67,7 +91,7 @@ export default function ManageCreateCoursePage() {
                     <label htmlFor="tagline" className="font-semibold">Course Tagline</label>
                     <div className="flex items-center w-full rounded-full border border-[#CFDBEF] gap-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF]">
                         <img src="/assets/images/icons/bill-black.svg" className="w-6 h-6" alt="icon" />
-                        <input {...register('tagline')} type="text" name="tagline" id="tagline" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write tagline for better copy" />
+                        <input {...register('tagline')} type="text" id="tagline" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write tagline for better copy" />
                     </div>
                     <span className="error-message text-[#FF435A]">
                         {errors.tagline?.message}
@@ -77,9 +101,9 @@ export default function ManageCreateCoursePage() {
                     <label htmlFor="category" className="font-semibold">Select Category</label>
                     <div className="flex items-center w-full rounded-full border border-[#CFDBEF] gap-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF]">
                         <img src="/assets/images/icons/bill-black.svg" className="w-6 h-6" alt="icon" />
-                        <select {...register('categoryId')} name="category" id="category" className="appearance-none outline-none w-full py-3 px-2 -mx-2 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent">
+                        <select {...register('categoryId')} id="category" className="appearance-none outline-none w-full py-3 px-2 -mx-2 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent">
                             <option value="" hidden>Choose one category</option>
-                            {categories?.data?.map((item) => (
+                            {data?.categories?.data?.map((item) => (
                                 <option key={item._id} value={item._id} >{item.name}</option>
                             ))}
 
@@ -94,7 +118,7 @@ export default function ManageCreateCoursePage() {
                     <label htmlFor="desc" className="font-semibold">Description</label>
                     <div className="flex w-full rounded-[20px] border border-[#CFDBEF] gap-3 p-5  transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF]">
                         <img src="/assets/images/icons/note-black.png" className="w-6 h-6" alt="icon" />
-                        <textarea {...register('description')} name="desc" id="desc" rows="5" className="appearance-none outline-none w-full font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Explain what this course about"></textarea>
+                        <textarea {...register('description')} id="desc" rows="5" className="appearance-none outline-none w-full font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Explain what this course about"></textarea>
                     </div>
                     <span className="error-message text-[#FF435A]">
                         {errors.description?.message}
@@ -104,7 +128,7 @@ export default function ManageCreateCoursePage() {
                     <button type="button" className="w-full rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap">
                         Save as Draft
                     </button>
-                    <button type="submit" className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap">
+                    <button type="submit" disabled={isLoading} className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap">
                         Create Now
                     </button>
                 </div>
