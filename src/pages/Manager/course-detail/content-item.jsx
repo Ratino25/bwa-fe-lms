@@ -3,13 +3,15 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 export default function ContentItem({
-    id = 1, 
+    id = "1", 
     index = 1, 
     type = 'video', 
     title = 'Install VScode di Windows',
-    coursesId = 2
+    coursesId = "2"
 }){
+    console.log(title);
     return (
+        
         <div className="card flex items-center gap-5">
                     <div className="relative flex shrink-0 w-[140px] h-[110px] ">
                         <p className="absolute -top-[10px] -left-[10px] flex shrink-0 w-[30px] h-[30px] rounded-full items-center justify-center text-center bg-[#662FFF] text-white">
@@ -39,9 +41,9 @@ export default function ContentItem({
 }
 
 ContentItem.PropTypes = {
-    id: PropTypes.number,
+    id: PropTypes.string,
     index: PropTypes.number,
     type: PropTypes.string,
     title: PropTypes.string,
-    coursesId: PropTypes.number
+    coursesId: PropTypes.string
 }
