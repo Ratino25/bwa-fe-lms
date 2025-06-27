@@ -19,10 +19,21 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import 'ckeditor5/ckeditor5.css';
 
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { mutateContentSchema } from "../../../utils/zodSchema";
 
 
 
 export default function ManageContentCreatePage() {
+
+    const {register, handleSubmit, formState:{errors}, setValue} = useForm({
+        resolver: zodResolver(mutateContentSchema)
+    })
+
+    const onSubmit = (values) => {
+        console.log(values)
+    }
     return (
         <>
             <div id="Breadcrumb" className="flex items-center gap-5 *:after:content-['/'] *:after:ml-5">
@@ -41,33 +52,42 @@ export default function ManageContentCreatePage() {
                     </div>
                 </div>
             </header>
-            <form action="manage-course-materi.html" className="flex flex-col w-[930px] rounded-[30px] p-[30px] gap-[30px] bg-[#F8FAFB]">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-[930px] rounded-[30px] p-[30px] gap-[30px] bg-[#F8FAFB]">
                 <div className="flex flex-col gap-[10px]">
                     <label htmlFor="title" className="font-semibold">Content Title</label>
                     <div className="flex items-center w-full rounded-full border border-[#CFDBEF] gap-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF]">
                         <img src="/assets/images/icons/note-favorite-black.svg" className="w-6 h-6" alt="icon" />
-                        <input type="text" name="title" id="title" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write better name for your course" required />
+                        <input {...register("title")} type="text" id="title" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write better name for your course" />
                     </div>
+                    <span className="error-message text-[#FF435A]">
+                        {errors.title?.message}
+                    </span>
                 </div>
                 <div className="flex flex-col gap-[10px]">
                     <label htmlFor="type" className="font-semibold">Select Type</label>
                     <div className="flex items-center w-full rounded-full border border-[#CFDBEF] gap-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF]">
                         <img src="/assets/images/icons/crown-black.svg" className="w-6 h-6" alt="icon" />
-                        <select name="type" id="type" className="appearance-none outline-none w-full py-3 px-2 -mx-2 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent">
+                        <select {...register("type")} id="type" className="appearance-none outline-none w-full py-3 px-2 -mx-2 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent">
                             <option value="" hidden>Choose content type</option>
-                            <option value="" >test</option>
-                            <option value="" >test</option>
-                            <option value="" >test</option>
+                            <option value="video" >Video</option>
+                            <option value="text" >Text</option>
+                            
                         </select>
                         <img src="/assets/images/icons/arrow-down.svg" className="w-6 h-6" alt="icon" />
                     </div>
+                    <span className="error-message text-[#FF435A]">
+                        {errors.type?.message}
+                    </span>
                 </div>
                 <div className="flex flex-col gap-[10px]">
                     <label htmlFor="video" className="font-semibold">Youtube Video ID</label>
                     <div className="flex items-center w-full rounded-full border border-[#CFDBEF] gap-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF]">
                         <img src="/assets/images/icons/bill-black.svg" className="w-6 h-6" alt="icon" />
-                        <input type="text" name="video" id="video" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write tagline for better copy" />
+                        <input {...register("youtubeId")} type="text" id="video" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write tagline for better copy" />
                     </div>
+                    <span className="error-message text-[#FF435A]">
+                        {errors.youtubeId?.message}
+                    </span>
                 </div>
                 <div className="flex flex-col gap-[10px]">
                     <label className="font-semibold">Content Text</label>
@@ -103,15 +123,25 @@ export default function ManageContentCreatePage() {
                     <CKEditor
                         editor={ClassicEditor}
                         data="<h1>Hello from CKEditor 5!</h1>"
-                        onChange={(event, editor) => {
+                        // onChange={(event, editor) => {
+                        //     const data = editor.getData();
+                        // setValue('text', data)
+                        //     console.log({ data });
+                        // }}
+                        onChange={(_,editor) => {
                             const data = editor.getData();
-                            console.log({ data });
+                            setValue('text', data)
                         }}
                     />
+                    <span className="error-message text-[#FF435A]">
+                        {errors.text?.message}
+                    </span>
+
+
 
                 </div>
                 <div className="flex items-center gap-[14px]">
-                    <button type="submit" className="w-full rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap">
+                    <button type="button" className="w-full rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap">
                         Save as Draft
                     </button>
                     <button type="submit" className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap">
