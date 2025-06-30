@@ -27,9 +27,11 @@ import { mutateContentSchema } from "../../../utils/zodSchema";
 
 export default function ManageContentCreatePage() {
 
-    const {register, handleSubmit, formState:{errors}, setValue} = useForm({
+    const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm({
         resolver: zodResolver(mutateContentSchema)
     })
+
+    const type = watch('type')
 
     const onSubmit = (values) => {
         console.log(values)
@@ -71,7 +73,7 @@ export default function ManageContentCreatePage() {
                             <option value="" hidden>Choose content type</option>
                             <option value="video" >Video</option>
                             <option value="text" >Text</option>
-                            
+
                         </select>
                         <img src="/assets/images/icons/arrow-down.svg" className="w-6 h-6" alt="icon" />
                     </div>
@@ -79,21 +81,24 @@ export default function ManageContentCreatePage() {
                         {errors.type?.message}
                     </span>
                 </div>
-                <div className="flex flex-col gap-[10px]">
-                    <label htmlFor="video" className="font-semibold">Youtube Video ID</label>
-                    <div className="flex items-center w-full rounded-full border border-[#CFDBEF] gap-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF]">
-                        <img src="/assets/images/icons/bill-black.svg" className="w-6 h-6" alt="icon" />
-                        <input {...register("youtubeId")} type="text" id="video" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write tagline for better copy" />
+                {type === "video" && (
+                    <div className="flex flex-col gap-[10px]">
+                        <label htmlFor="video" className="font-semibold">Youtube Video ID</label>
+                        <div className="flex items-center w-full rounded-full border border-[#CFDBEF] gap-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF]">
+                            <img src="/assets/images/icons/bill-black.svg" className="w-6 h-6" alt="icon" />
+                            <input {...register("youtubeId")} type="text" id="video" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write tagline for better copy" />
+                        </div>
+                        <span className="error-message text-[#FF435A]">
+                            {errors.youtubeId?.message}
+                        </span>
                     </div>
-                    <span className="error-message text-[#FF435A]">
-                        {errors.youtubeId?.message}
-                    </span>
-                </div>
-                <div className="flex flex-col gap-[10px]">
-                    <label className="font-semibold">Content Text</label>
-                    {/* <div id="editor">
+                )}
+                {type === "text" && (
+                    <div className="flex flex-col gap-[10px]">
+                        <label className="font-semibold">Content Text</label>
+                        {/* <div id="editor">
                     </div>                 */}
-                    {/* <CKEditor
+                        {/* <CKEditor
                         editor={ClassicEditor}
                         config={{
                             toolbar: [
@@ -120,26 +125,27 @@ export default function ManageContentCreatePage() {
                         }}
                     /> */}
 
-                    <CKEditor
-                        editor={ClassicEditor}
-                        data="<h1>Hello from CKEditor 5!</h1>"
-                        // onChange={(event, editor) => {
-                        //     const data = editor.getData();
-                        // setValue('text', data)
-                        //     console.log({ data });
-                        // }}
-                        onChange={(_,editor) => {
-                            const data = editor.getData();
-                            setValue('text', data)
-                        }}
-                    />
-                    <span className="error-message text-[#FF435A]">
-                        {errors.text?.message}
-                    </span>
+                        <CKEditor
+                            editor={ClassicEditor}
+                            data="<h1>Hello from CKEditor 5!</h1>"
+                            // onChange={(event, editor) => {
+                            //     const data = editor.getData();
+                            // setValue('text', data)
+                            //     console.log({ data });
+                            // }}
+                            onChange={(_, editor) => {
+                                const data = editor.getData();
+                                setValue('text', data)
+                            }}
+                        />
+                        <span className="error-message text-[#FF435A]">
+                            {errors.text?.message}
+                        </span>
 
 
 
-                </div>
+                    </div>
+                )}
                 <div className="flex items-center gap-[14px]">
                     <button type="button" className="w-full rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap">
                         Save as Draft
