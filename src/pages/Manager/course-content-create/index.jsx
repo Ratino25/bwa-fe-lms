@@ -22,6 +22,9 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { mutateContentSchema } from "../../../utils/zodSchema";
+import { useMutation } from "@tanstack/react-query";
+import { createContent } from "../../../services/courseService";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 
@@ -31,10 +34,26 @@ export default function ManageContentCreatePage() {
         resolver: zodResolver(mutateContentSchema)
     })
 
+    const {isLoading, mutateAsync} = useMutation({
+        mutationFn: (data) => createContent(data)
+    })
+
+    const {id} = useParams()
+    const navigate = useNavigate()
+
     const type = watch('type')
 
-    const onSubmit = (values) => {
-        console.log(values)
+    const onSubmit = async (values) => {
+        console.log(values);
+        try {
+            await mutateAsync({
+                ...values,
+                courseId: id
+            })
+            navigate(`/manager/courses/${id}`)
+        } catch (error) {
+            console.log(error);
+        }
     }
     return (
         <>
@@ -150,7 +169,7 @@ export default function ManageContentCreatePage() {
                     <button type="button" className="w-full rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap">
                         Save as Draft
                     </button>
-                    <button type="submit" className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap">
+                    <button type="submit" disabled={isLoading} className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap">
                         Add Content Now
                     </button>
                 </div>
