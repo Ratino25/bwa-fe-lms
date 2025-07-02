@@ -24,11 +24,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { mutateContentSchema } from "../../../utils/zodSchema";
 import { useMutation } from "@tanstack/react-query";
 import { createContent } from "../../../services/courseService";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 
 
 
 export default function ManageContentCreatePage() {
+
+    const content = useLoaderData();
 
     const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm({
         resolver: zodResolver(mutateContentSchema)
@@ -60,7 +62,7 @@ export default function ManageContentCreatePage() {
             <div id="Breadcrumb" className="flex items-center gap-5 *:after:content-['/'] *:after:ml-5">
                 <span className="last-of-type:after:content-[''] last-of-type:font-semibold">Manage Course</span>
                 <span className="last-of-type:after:content-[''] last-of-type:font-semibold">Course</span>
-                <span className="last-of-type:after:content-[''] last-of-type:font-semibold">Add Content</span>
+                <span className="last-of-type:after:content-[''] last-of-type:font-semibold">{content === undefined ? "Add" : "Edit"} Content</span>
             </div>
             <header className="flex items-center justify-between gap-[30px]">
                 <div className="flex items-center gap-[30px]">
@@ -68,7 +70,7 @@ export default function ManageContentCreatePage() {
                         <img src="/assets/images/thumbnails/th-1.png" className="w-full h-full object-cover" alt="thumbnail" />
                     </div>
                     <div>
-                        <h1 className="font-extrabold text-[28px] leading-[42px]">Add Content</h1>
+                        <h1 className="font-extrabold text-[28px] leading-[42px]">{content === undefined ? "Add" : "Edit"} Content</h1>
                         <p className="text-[#838C9D] mt-[1]">Give a best content for the course</p>
                     </div>
                 </div>
@@ -146,7 +148,7 @@ export default function ManageContentCreatePage() {
 
                         <CKEditor
                             editor={ClassicEditor}
-                            data="<h1>Hello from CKEditor 5!</h1>"
+                            data="<h1></h1>"
                             // onChange={(event, editor) => {
                             //     const data = editor.getData();
                             // setValue('text', data)
@@ -170,7 +172,7 @@ export default function ManageContentCreatePage() {
                         Save as Draft
                     </button>
                     <button type="submit" disabled={isLoading} className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap">
-                        Add Content Now
+                        {content === undefined ? "Add" : "Edit"} Content Now
                     </button>
                 </div>
             </form>
