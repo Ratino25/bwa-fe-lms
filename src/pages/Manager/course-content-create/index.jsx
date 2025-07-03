@@ -171,6 +171,17 @@ export default function ManageContentCreatePage() {
                             // setValue('text', data)
                             //     console.log({ data });
                             // }}
+                            config={{
+                                toolbar: [
+                                    'undo', 'redo', '|',
+                                    'heading', '|', 'bold', 'italic', '|',
+                                    'link', 'insertTable', 'mediaEmbed', '|',
+                                    'bulletedList', 'numberedList', 'indent', 'outdent'
+                                ],
+                                initialData: content?.text || '<h1></h1>',
+                                // plugins: [Bold, Essentials, Heading, Indent, IndentBlock, Italic, Link, List, MediaEmbed, Paragraph, Table, Undo],
+                            }}
+                            {...register("text")}
                             onChange={(_, editor) => {
                                 const data = editor.getData();
                                 setValue('text', data)
