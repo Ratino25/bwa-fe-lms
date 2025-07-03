@@ -23,7 +23,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { mutateContentSchema } from "../../../utils/zodSchema";
 import { useMutation } from "@tanstack/react-query";
-import { createContent } from "../../../services/courseService";
+import { createContent, updateContent } from "../../../services/courseService";
 import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 
 
@@ -31,27 +31,44 @@ import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 export default function ManageContentCreatePage() {
 
     const content = useLoaderData();
+    const { id, contentId } = useParams()
+    const navigate = useNavigate()
 
     const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm({
-        resolver: zodResolver(mutateContentSchema)
+        resolver: zodResolver(mutateContentSchema),
+        defaultValues: {
+            title: content?.title,
+            type: content?.type,
+            youtubeId: content?.youtubeId,
+            text: content?.text
+        }
     })
 
-    const {isLoading, mutateAsync} = useMutation({
+    const mutateCreate = useMutation({
         mutationFn: (data) => createContent(data)
     })
 
-    const {id} = useParams()
-    const navigate = useNavigate()
+    const mutateUpdate = useMutation({
+        mutationFn: (data) => updateContent(data, contentId)
+    })
+
+
 
     const type = watch('type')
 
     const onSubmit = async (values) => {
-        console.log(values);
         try {
-            await mutateAsync({
-                ...values,
-                courseId: id
-            })
+            if (content === undefined) {
+                await mutateCreate.mutateAsync({
+                    ...values,
+                    courseId: id
+                })
+            } else {
+                await mutateUpdate.mutateAsync({
+                    ...values,
+                    courseId: id
+                })
+            }
             navigate(`/manager/courses/${id}`)
         } catch (error) {
             console.log(error);
@@ -171,7 +188,7 @@ export default function ManageContentCreatePage() {
                     <button type="button" className="w-full rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap">
                         Save as Draft
                     </button>
-                    <button type="submit" disabled={isLoading} className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap">
+                    <button type="submit" disabled={content === undefined ? mutateCreate.isLoading : mutateUpdate.isLoading} className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap">
                         {content === undefined ? "Add" : "Edit"} Content Now
                     </button>
                 </div>
