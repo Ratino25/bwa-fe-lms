@@ -1,7 +1,20 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { createStudentSchema } from "../../../utils/zodSchema";
 
 export default function ManageStudentCreatePage() {
+
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: zodResolver(createStudentSchema)
+    })
+
+    const onSubmit = (values) => {
+        console.log(values);
+    }
+
+
     return (
         <>
             <header className="flex items-center justify-between gap-[30px]">
@@ -15,7 +28,7 @@ export default function ManageStudentCreatePage() {
                     </Link>
                 </div>
             </header>
-            <form action="manage-student.html" className="flex flex-col w-[550px] rounded-[30px] p-[30px] gap-[30px] bg-[#F8FAFB]">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-[550px] rounded-[30px] p-[30px] gap-[30px] bg-[#F8FAFB]">
                 <div className="relative flex flex-col gap-[10px]">
                     <label htmlFor="thumbnail" className="font-semibold">Add a Avatar</label>
                     <div className="flex items-center gap-[14px]">
@@ -29,31 +42,43 @@ export default function ManageStudentCreatePage() {
                             <img src="/assets/images/icons/delete.svg" alt="delete" />
                         </button>
                     </div>
-                    <input type="file" name="thumbnail" id="thumbnail" accept="image/*" className="absolute bottom-0 left-1/4 -z-10" required />
+                    <input {...register('photo')} type="file" id="thumbnail" accept="image/*" className="absolute bottom-0 left-1/4 -z-10"  />
+                    <span className="error-message text-[#FF435A]">
+                        {errors.photo?.message}
+                    </span>
                 </div>
                 <div className="flex flex-col gap-[10px]">
                     <label for="name" className="font-semibold">Full Name</label>
                     <div className="flex items-center w-full rounded-full border border-[#CFDBEF] gap-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF]">
                         <img src="/assets/images/icons/note-favorite-black.svg" className="w-6 h-6" alt="icon" />
-                        <input type="text" name="name" id="name" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write your name" required />
+                        <input {...register('name')} type="text" id="name" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write your name"  />
                     </div>
+                    <span className="error-message text-[#FF435A]">
+                        {errors.name?.message}
+                    </span>
                 </div>
                 <div className="flex flex-col gap-[10px]">
                     <label for="email" className="font-semibold">Email Address</label>
                     <div className="flex items-center w-full rounded-full border border-[#CFDBEF] gap-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF]">
                         <img src="/assets/images/icons/sms-black.svg" className="w-6 h-6" alt="icon" />
-                        <input type="email" name="email" id="email" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write your email address" required />
+                        <input {...register('email')} type="email" id="email" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Write your email address"  />
                     </div>
+                    <span className="error-message text-[#FF435A]">
+                        {errors.email?.message}
+                    </span>
                 </div>
                 <div className="flex flex-col gap-[10px]">
                     <label for="password" className="font-semibold">Password</label>
                     <div className="flex items-center w-full rounded-full border border-[#CFDBEF] gap-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#662FFF]">
                         <img src="/assets/images/icons/lock-black.svg" className="w-6 h-6" alt="icon" />
-                        <input type="password" name="password" id="password" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Type password" required />
+                        <input {...register('password')} type="password" id="password" className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#838C9D] !bg-transparent" placeholder="Type password" />
                     </div>
+                    <span className="error-message text-[#FF435A]">
+                        {errors.password?.message}
+                    </span>
                 </div>
                 <div className="flex items-center gap-[14px]">
-                    <button type="submit" className="w-full rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap">
+                    <button type="button" className="w-full rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap">
                         Save as Draft
                     </button>
                     <button type="submit" className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap">
