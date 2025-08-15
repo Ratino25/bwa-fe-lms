@@ -98,7 +98,9 @@ export default function ManageCreateCoursePage() {
                             <img src="/assets/images/icons/delete.svg" alt="delete" />
                         </button>
                     </div>
-                    <input {...register('thumbnail')} ref={inputFileRef} type="file" onChange={(e) => { if (e.target.files) { setFile(e.target.files[0]); setValue('thumbnail', e.target.files[0]) } }} name="thumbnail" id="thumbnail" accept="image/*" className="absolute bottom-0 left-1/4 -z-10" />
+                    <input {...register('thumbnail')} ref={inputFileRef} type="file" 
+                    onChange={(e) => { if (e.target.files) { setFile(e.target.files[0]); setValue('thumbnail', e.target.files[0]) } }}  
+                    id="thumbnail" accept="image/*" className="absolute bottom-0 left-1/4 -z-10" />
                     <span className="error-message text-[#FF435A]">
                         {errors.thumbnail?.message}
                     </span>
