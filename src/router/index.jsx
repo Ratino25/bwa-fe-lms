@@ -16,7 +16,8 @@ import secureLocalStorage from "react-secure-storage";
 import { MANAGER_SESSION, STORAGE_KEYS } from "../utils/const";
 import { getCategories, getCourse, getCourseDetail, getDetailContent } from "../services/courseService";
 import ManageStudentCreatePage from "../pages/Manager/students-create";
-import { getStudents } from "../services/student";
+import { getStudents } from "../services/studentService";
+
 
 
 
