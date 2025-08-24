@@ -60,3 +60,8 @@ export const createStudentSchema = z.object({
     password: z.string().min(5),
     photo: z.any().refine((file) => file?.name, { message: 'Photo is required' })
 })
+
+export const updateStudentSchema = createStudentSchema.omit({
+    password: true,
+    photo: true,
+})
