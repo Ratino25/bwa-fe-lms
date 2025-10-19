@@ -3,22 +3,24 @@ import { Link, useRevalidator } from "react-router-dom";
 import PropTypes from "prop-types";
 import { deleteStudent } from "../../../services/studentService";
 import { useMutation } from "@tanstack/react-query";
+import { deleteStudentsCourse } from "../../../services/courseService";
 
 
 export default function StudentItem({
     imageUrl = '/assets/images/photos/photo-3.png',
     name = 'Ratino',
-    totalCourse = 0,
     id = "1"
 }) {
+
+    const {params} = useParams();
 
     const revalidator = useRevalidator();
 
     const { isLoading, mutateAsync } = useMutation({
-        mutationFn: () => deleteStudent(id)
+        mutationFn: () => deleteStudentsCourse({studentId: id}, params.id)
     })
 
-    const handleDelete = async () => {
+    const handleDelete = async (id) => {
         try {
             await mutateAsync()
             revalidator.revalidate()
@@ -35,18 +37,12 @@ export default function StudentItem({
             </div>
             <div className="w-full">
                 <h3 className="font-bold text-xl leading-[30px] line-clamp-1">{name}</h3>                
-                    <div className="flex items-center gap-5">
-                        <div className="flex items-center gap-[6px] mt-[6px]">
-                            <img src="/assets/images/icons/note-favorite-purple.svg" className="w-5 h-5" alt="icon" />
-                            <p className="text-[#838C9D]">{totalCourse} Course Joined</p>
-                        </div>
-                    </div>
             </div>
             <div className="flex justify-end items-center gap-3">
-                <Link to={`/manager/students/edit/${id}`} className="w-fit rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap">
-                    Edit Profile
-                </Link>
-                <button type="button" disabled={isLoading} onClick={handleDelete} className="w-fit rounded-full p-[14px_20px] bg-[#FF435A] font-semibold text-white text-nowrap">Delete</button>
+                <button type="button" 
+                disabled={isLoading} 
+                onClick={handleDelete} 
+                className="w-fit rounded-full p-[14px_20px] bg-[#FF435A] font-semibold text-white text-nowrap">Delete</button>
             </div>
         </div>
     )

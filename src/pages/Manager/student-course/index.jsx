@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLoaderData, useParams } from "react-router-dom";
-import StudentItem from "../students/student-item";
+import StudentItem from "./student-item";
 
 export default function StudentCourseList() {
     const {id} = useParams();

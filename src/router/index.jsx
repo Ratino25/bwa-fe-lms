@@ -17,7 +17,8 @@ import { MANAGER_SESSION, STORAGE_KEYS } from "../utils/const";
 import { getCategories, getCourse, getCourseDetail, getDetailContent, getStudentsCourse } from "../services/courseService";
 import ManageStudentCreatePage from "../pages/Manager/students-create";
 import { getDetailStudent, getStudents } from "../services/studentService";
-import StudentCourseList from "../pages/Manager/students-create/student-course-list";
+import StudentCourseList from "../pages/Manager/student-course/index.jsx";
+import StudentForm from "../pages/Manager/student-course/student-form.jsx";
 
 
 
@@ -141,6 +142,14 @@ const router = createBrowserRouter([
           return course?.data;
         },
         element: <StudentCourseList/>
+      },
+      {
+        path: '/manager/courses/students/:id/add',
+        loader: async () => {
+          const students = await getStudents();
+          return students?.data;
+        },
+        element: <StudentForm/>
       }
     ]
   },
