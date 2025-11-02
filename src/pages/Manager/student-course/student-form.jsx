@@ -20,20 +20,21 @@ export default function StudentForm() {
     });
 
 
-
     const navigate = useNavigate();
 
     const {isLoading, mutateAsync} = useMutation({
-        mutationFn: (data) => addStudentsCourse(data, id)
+        mutationFn: (data) => addStudentsCourse(id, data)
     })
 
     const onSubmit = async (values) => {
         console.log('SUBMIT CALLED ✅', data);
+        console.log("🧾 Form values:", values);
+        console.log(`🎯 Course ID: ${id}`);
         try {
             console.log(values);
             await mutateAsync(values)
-
-            navigate(`/manager/courses/students/${id}`);
+            console.log("✅ Course berhasil dibuat" + data);
+            navigate(`/manager/courses/students/${data}`);
 
         } catch (error) {
             console.error("❌ Gagal membuat course:", error);

@@ -19,6 +19,7 @@ import ManageStudentCreatePage from "../pages/Manager/students-create";
 import { getDetailStudent, getStudents } from "../services/studentService";
 import StudentCourseList from "../pages/Manager/student-course/index.jsx";
 import StudentForm from "../pages/Manager/student-course/student-form.jsx";
+import { getOverviews } from "../services/overviewService.js";
 
 
 
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
+        loader:   async () => {
+          const overviews = await getOverviews();
+          return overviews.data;
+        },
         element: <ManagerHomePage />
       },
       {
@@ -136,7 +141,7 @@ const router = createBrowserRouter([
         element: <ManageStudentCreatePage/>
       },
       {
-        path: '/manager/courses/students/:id',
+        path: `/manager/courses/students/:id`,
         loader: async ({params}) => {
           const course = await getStudentsCourse(params.id)
           return course?.data;
@@ -144,7 +149,7 @@ const router = createBrowserRouter([
         element: <StudentCourseList/>
       },
       {
-        path: '/manager/courses/students/:id/add',
+        path: `/manager/courses/students/:id/add`,
         loader: async () => {
           const students = await getStudents();
           return students?.data;

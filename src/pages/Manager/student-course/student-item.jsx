@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useRevalidator } from "react-router-dom";
+import { Link, useParams, useRevalidator } from "react-router-dom";
 import PropTypes from "prop-types";
 import { deleteStudent } from "../../../services/studentService";
 import { useMutation } from "@tanstack/react-query";

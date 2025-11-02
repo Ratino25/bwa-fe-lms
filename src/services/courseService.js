@@ -33,6 +33,22 @@ export const deleteDetailContent = async (id) => apiInstanceAuth.delete(`/course
 
 export const getStudentsCourse = async (id) => apiInstanceAuth.get(`/courses/students/${id}`).then(res => res.data)
 
-export const addStudentsCourse = async (data, id) => apiInstanceAuth.post(`/courses/students/${id}`, data).then(res => res.data)
+// export const addStudentsCourse = async (data, id) => apiInstanceAuth.post(`/courses/students/${id}`, data).then(res => res.data)
+
+
+export const addStudentsCourse = async (id, data) => {
+  console.log("📦 Sending to:", `/courses/students/${id}`, "with data:", data);
+  console.log("ID,", id);
+  console.log("Data,", data);
+  return apiInstanceAuth.post(`/courses/students/${data}`, data)
+    .then(res => res.data)
+    .catch(err => {
+      console.error("❌ API ERROR:", err.response?.data || err.message);
+      throw err;
+    });
+};
+
+
+
 
 export const deleteStudentsCourse = async (data, id) => apiInstanceAuth.put(`/courses/students/${id}`, data).then(res => res.data)
