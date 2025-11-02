@@ -31,10 +31,25 @@ const router = createBrowserRouter([
   },
   {
     path: "/manager/sign-in",
+    loader: async () => {
+      const session = secureLocalStorage.getItem(STORAGE_KEYS)
+      if (session && session.role === 'manager') {
+        throw redirect('/manager');
+      }
+      return true
+    },
     element: <SignInPage />
   },
   {
     path: "/manager/sign-up",
+    path: "/manager/sign-in",
+    loader: async () => {
+      const session = secureLocalStorage.getItem(STORAGE_KEYS)
+      if (session && session.role === 'manager') {
+        throw redirect('/manager');
+      }
+      return true
+    },
     element: <SignUpPage />
   },
   {
@@ -46,7 +61,7 @@ const router = createBrowserRouter([
     id: MANAGER_SESSION,
     loader: async () => {
       const session = secureLocalStorage.getItem(STORAGE_KEYS)
-      if (!session) {
+      if (!session || session.role !== 'manager') {
         throw redirect('/manager/sign-in');
       }
       return session
